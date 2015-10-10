@@ -1,0 +1,8 @@
+# General
+*.[oa]
+!cosmos_*bit.o
+
+# EduCOSMOS
+*.vol
+Edu*_Test
+odysseus_error.log
