@@ -241,7 +241,7 @@ Four EduBfM_Test(Four volId)
 
 	/* Test for EduBfM_GetTrain() when new pages are inserted into full buffer */
 	printf("*Test 1_6 : Test for EduBfM_GetTrain() when new pages are inserted into full buffer\n");
-	printf("->Insert five new pages into full buffer and free that pages.\n\n");
+	printf("->Insert four new pages into full buffer and free that pages.\n\n");
 	for ( i = NUM_PAGE_BUFS; i < PAGE_BUFS_CLOCKALG ; i++)
 	{
 		/* The successful default solution code is called if "Edu" is omitted from the function name in the following line */
