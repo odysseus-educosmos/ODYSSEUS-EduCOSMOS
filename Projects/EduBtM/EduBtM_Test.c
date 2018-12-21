@@ -112,12 +112,15 @@ Four EduBtM_Test(Four volId, Four handle){
 	Four		stopCompOp;								/* stop condition for EduBtM_FetchNext() */
 	Four		compOp;									/* conditino for EduBtM_Fetch() */
 	Four		keyValueNumber = 0;						/* value of integer key */	
+	Four		startKeyValueNumber, stopKeyValueNumber;/* values of integer key for scan */
 	SlottedPage *catPage;								/* buffer page containing the catalog object */
 	sm_CatOverlayForBtree *catEntry;					/* pointer to Btree file catalog information */
 	BtreeCursor cursor;									/* cursor for EduBtM_FetchNext() */
 	BtreeCursor next;									/* next object cursor from EduBtM_FetchNext() */
     Two 		lengthOfPlayerName;						/* length of variable key */
 	char 		playerName[MAXPLAYERNAME];				/* value of  variable key */
+	char		startPlayerName[MAXPLAYERNAME];			/* start value of variable key for scan*/
+	char		stopPlayerName[MAXPLAYERNAME];			/* stop value of variable key for scan*/
 	char		*res;									/* string for file input */
 	FILE		*fp;
 
@@ -275,7 +278,7 @@ Four EduBtM_Test(Four volId, Four handle){
 					else if (e == eNOTFOUND_BTM) printf("There is no object that statisfies the condition.\n");
 					else if (e < eNOERROR) ERR(e);
 					else printf("The object (key: %d, OID: ( %d, %d, %d, %d)) is deleted from the B+ tree index.\n", 
-							keyValueNumber, oid.volNo, oid.pageNo, oid.slotNo, oid.unique);
+							keyValueNumber, cursor.oid.volNo, cursor.oid.pageNo, cursor.oid.slotNo, cursor.oid.unique);
 				}							
 
 				printf("****************************** EduBtM_DeleteObject. ******************************\n");
@@ -304,7 +307,7 @@ Four EduBtM_Test(Four volId, Four handle){
 						case 4:
 						case 5:	
 							printf("Entert the start key value : ");
-							if (scanf("%d", &keyValueNumber) == 0) 
+							if (scanf("%d", &startKeyValueNumber) == 0)
 							{
 								while( getchar() != '\n' );
 								e = -1;
@@ -312,7 +315,7 @@ Four EduBtM_Test(Four volId, Four handle){
 								break;
 							}
 							startKval.len = sizeof(Four_Invariable);
-							memcpy(&(startKval.val[0]), &keyValueNumber, sizeof(Four_Invariable));
+							memcpy(&(startKval.val[0]), &startKeyValueNumber, sizeof(Four_Invariable));
 							break;
 						case 6:
 							startCompOp = SM_EOF; 
@@ -326,7 +329,7 @@ Four EduBtM_Test(Four volId, Four handle){
 							break;
 					}
 				}while(e == -1);
-				
+
 
 				/* Get stop conditions */
 				do{
@@ -343,15 +346,20 @@ Four EduBtM_Test(Four volId, Four handle){
 						case 4:
 						case 5:
 							printf("Entert the stop key value : ");
-							if (scanf("%d", &keyValueNumber) == 0) 
+							if (scanf("%d", &stopKeyValueNumber) == 0)
 							{   
 								while( getchar() != '\n' );
 								e = -1;
 								printf("Wrong nubmer!!!\n");
 								break;
 							}
+							if ((startCompOp != stopCompOp && (startCompOp == 1 || stopCompOp == 1)) || (startCompOp == stopCompOp && startCompOp == 1 && startKeyValueNumber != stopKeyValueNumber))
+							{
+								e = -2;
+								break;
+							}
 							stopKval.len = sizeof(Four_Invariable);
-							memcpy(&(stopKval.val[0]), &keyValueNumber, sizeof(Four_Invariable));
+							memcpy(&(stopKval.val[0]), &stopKeyValueNumber, sizeof(Four_Invariable));
 							break;
 						case 6:
 							stopCompOp = SM_EOF;
@@ -366,10 +374,15 @@ Four EduBtM_Test(Four volId, Four handle){
 					}
 				}while (e == -1);
 
+				if (e == -2){
+					printf("The equal (=) operator must be used only for an exact match query, and cannot be used for a range search query.\n");
+					printf("****************************** Scan ******************************\n");
+					break;
+				}
 
 				/* The successful default solution code is called if "Edu" is omitted from the function name in the following line */
 				e = EduBtM_Fetch(&rootPid, &kdesc, &startKval, startCompOp, &stopKval, stopCompOp, &cursor);
-                if (e < eNOERROR) ERR(e);
+				if (e < eNOERROR) ERR(e);
 				else if (cursor.flag == CURSOR_EOS) {
 					printf("There is no object that satisfies the condition.\n");
 					break;
@@ -379,7 +392,7 @@ Four EduBtM_Test(Four volId, Four handle){
 						cursor.slotNo, cursor.leaf.volNo, cursor.leaf.pageNo);
 				printf("Key: %d, OID: (%d, %d, %d, %d)\n",
 						keyValueNumber, cursor.oid.volNo, cursor.oid.pageNo, cursor.oid.slotNo, cursor.oid.unique);
-                
+
 				do{
 
 					printf("(1. FetchNext   2. Dump   3. Quit Scan)\t");
@@ -653,7 +666,7 @@ Four EduBtM_Test(Four volId, Four handle){
 					if (e == eNOTFOUND_BTM) printf("There is no object that statisfies the condition.\n");
 					else if (e < eNOERROR) ERR(e);
 					else printf("The object (key: %s, OID: ( %d, %d, %d, %d)) is deleted from the B+ tree index.\n",
-							playerName, oid.volNo, oid.pageNo, oid.slotNo, oid.unique);
+							playerName, cursor.oid.volNo, cursor.oid.pageNo, cursor.oid.slotNo, cursor.oid.unique);
 
 				}
 				printf("****************************** EduBtM_DeleteObject. ******************************\n");
@@ -684,12 +697,12 @@ Four EduBtM_Test(Four volId, Four handle){
 						case 5:
 							printf("Enter the player name of start key value : ");
 							getchar();
-		        			fgets(playerName, MAXPLAYERNAME, stdin);
-							lengthOfPlayerName = strlen(playerName);
-							playerName[lengthOfPlayerName-- - 1] = '\0';
+							fgets(startPlayerName, MAXPLAYERNAME, stdin);
+							lengthOfPlayerName = strlen(startPlayerName);
+							startPlayerName[lengthOfPlayerName-- - 1] = '\0';
 							startKval.len = MAXPLAYERNAME;
 							memcpy(&(startKval.val[0]), &lengthOfPlayerName, sizeof(Two));
-							memcpy(&(startKval.val[sizeof(Two)]), &playerName, MAXPLAYERNAME);
+							memcpy(&(startKval.val[sizeof(Two)]), &startPlayerName, MAXPLAYERNAME);
 							break;
 						case 6:
 							startCompOp = SM_EOF;
@@ -722,12 +735,17 @@ Four EduBtM_Test(Four volId, Four handle){
 						case 5:
 							printf("Entert the player name of stop key value : ");
 							getchar();
-		        			fgets(playerName, MAXPLAYERNAME, stdin);
-							lengthOfPlayerName = strlen(playerName);
-							playerName[lengthOfPlayerName-- - 1] = '\0';
+							fgets(stopPlayerName, MAXPLAYERNAME, stdin);
+							lengthOfPlayerName = strlen(stopPlayerName);
+							stopPlayerName[lengthOfPlayerName-- - 1] = '\0';
+							if ((startCompOp != stopCompOp && (startCompOp == 1 || stopCompOp == 1)) || (startCompOp == stopCompOp && startCompOp == 1 && strcmp(startPlayerName, stopPlayerName) != 0))
+							{
+								e = -2;
+								break;
+							}
 							stopKval.len = MAXPLAYERNAME;
 							memcpy(&(stopKval.val[0]), &lengthOfPlayerName, sizeof(Two));
-							memcpy(&(stopKval.val[sizeof(Two)]), &playerName, MAXPLAYERNAME);
+							memcpy(&(stopKval.val[sizeof(Two)]), &stopPlayerName, MAXPLAYERNAME);
 							break;
 						case 6:
 							stopCompOp = SM_EOF;
@@ -742,7 +760,11 @@ Four EduBtM_Test(Four volId, Four handle){
 					}
 				}while (e == -1);
 
-				
+				if (e == -2){
+					printf("The equal (=) operator must be used only for an exact match query, and cannot be used for a range search query.\n");
+					printf("****************************** Scan ******************************\n");
+					break;
+				}
 
 				/* The successful default solution code is called if "Edu" is omitted from the function name in the following line */
 				e = EduBtM_Fetch(&rootPid, &kdesc, &startKval, startCompOp, &stopKval, stopCompOp, &cursor);
@@ -797,7 +819,7 @@ Four EduBtM_Test(Four volId, Four handle){
 							
 							e = dumpBtreePage(&dumpPage, kdesc);
 							if (e == eBADBTREEPAGE_BTM) printf("The page (PID: ( %d, %d )) does not exist in the B+ tree index.\n", dumpPage.volNo, dumpPage. pageNo);
-			                else if (e < eNOERROR) ERR(e);
+							else if (e < eNOERROR) ERR(e);
 							break;
 							
 						case 3:
