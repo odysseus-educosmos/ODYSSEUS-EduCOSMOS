@@ -74,7 +74,8 @@ INTERFACE = EduBtM_CreateIndex.o EduBtM_DeleteObject.o EduBtM_DropIndex.o \
 NONINTERFACE = edubtm_BinarySearch.o edubtm_Compact.o edubtm_Compare.o \
 			   edubtm_Delete.o edubtm_FirstObject.o edubtm_FreePages.o \
 			   edubtm_InitPage.o edubtm_Insert.o edubtm_LastObject.o \
-			   edubtm_Split.o edubtm_root.o
+			   edubtm_Split.o edubtm_root.o \
+			   edubtm_TestInt.o edubtm_TestVarchar.o edubtm_Check.o edubtm_Dump.o \
 
 TESTMODULE = EduBtM_Test.o EduBtM_TestModule.o
 

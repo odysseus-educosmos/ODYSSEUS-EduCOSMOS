@@ -1,49 +1,25 @@
 /******************************************************************************/
 /*                                                                            */
-/*    Copyright (c) 2013-2015, Kyu-Young Whang, KAIST                         */
-/*    All rights reserved.                                                    */
-/*                                                                            */
-/*    Redistribution and use in source and binary forms, with or without      */
-/*    modification, are permitted provided that the following conditions      */
-/*    are met:                                                                */
-/*                                                                            */
-/*    1. Redistributions of source code must retain the above copyright       */
-/*       notice, this list of conditions and the following disclaimer.        */
-/*                                                                            */
-/*    2. Redistributions in binary form must reproduce the above copyright    */
-/*       notice, this list of conditions and the following disclaimer in      */
-/*       the documentation and/or other materials provided with the           */
-/*       distribution.                                                        */
-/*                                                                            */
-/*    3. Neither the name of the copyright holder nor the names of its        */
-/*       contributors may be used to endorse or promote products derived      */
-/*       from this software without specific prior written permission.        */
-/*                                                                            */
-/*    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS     */
-/*    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT       */
-/*    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS       */
-/*    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE          */
-/*    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,    */
-/*    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,    */
-/*    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;        */
-/*    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER        */
-/*    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT      */
-/*    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN       */
-/*    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE         */
-/*    POSSIBILITY OF SUCH DAMAGE.                                             */
-/*                                                                            */
-/******************************************************************************/
-/******************************************************************************/
-/*                                                                            */
-/*    ODYSSEUS/EduCOSMOS Educational Purpose Object Storage System            */
-/*    (Version 1.0)                                                           */
+/*    ODYSSEUS/EduCOSMOS Educational-Purpose Object Storage System            */
 /*                                                                            */
 /*    Developed by Professor Kyu-Young Whang et al.                           */
 /*                                                                            */
+/*    Database and Multimedia Laboratory                                      */
+/*                                                                            */
+/*    Computer Science Department and                                         */
 /*    Advanced Information Technology Research Center (AITrc)                 */
 /*    Korea Advanced Institute of Science and Technology (KAIST)              */
 /*                                                                            */
-/*    e-mail: odysseus.educosmos@gmail.com                                    */
+/*    e-mail: kywhang@cs.kaist.ac.kr                                          */
+/*    phone: +82-42-350-7722                                                  */
+/*    fax: +82-42-350-8380                                                    */
+/*                                                                            */
+/*    Copyright (c) 1995-2013 by Kyu-Young Whang                              */
+/*                                                                            */
+/*    All rights reserved. No part of this software may be reproduced,        */
+/*    stored in a retrieval system, or transmitted, in any form or by any     */
+/*    means, electronic, mechanical, photocopying, recording, or otherwise,   */
+/*    without prior written permission of the copyright owner.                */
 /*                                                                            */
 /******************************************************************************/
 /*
@@ -101,7 +77,7 @@ Four main()
 	title = "test";
 	volId = 1000;
 	extSize = 16;
-	numPagesInDevices[0] = 500;
+	numPagesInDevices[0] = 5000;
 	segmentSize = 16;
 
 	/*
@@ -137,7 +113,7 @@ Four main()
 	/* Test miniBtM */
 	e = EduBtM_Test(volId, handle);
 	if (e < eNOERROR){
-		printf("EduBtM_Test failed!!!\n");
+		printf("EduBtM_Test failed!!!\n%d\n", e);
 		LRDS_AbortTransaction(&xactId);
 		LRDS_Dismount(volId);
 		LRDS_FreeHandle(handle);

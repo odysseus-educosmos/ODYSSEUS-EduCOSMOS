@@ -51,6 +51,7 @@
 
 
 #include <stdio.h>
+#include <stdbool.h>
 #include "EduBfM_basictypes.h"
 #include "EduBfM_error.h"
 
